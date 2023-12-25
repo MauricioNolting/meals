@@ -22,6 +22,7 @@ export const Restaurant = sequelize.define('restaurant', {
   },
   status: {
     type: DataTypes.BOOLEAN,
+    defaultValue: true,
     allowNull: false,
   },
 });

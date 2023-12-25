@@ -28,7 +28,7 @@ export const Review = sequelize.define('review', {
   },
   status: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
     defaultValue: true,
+    allowNull: false,
   },
 });

@@ -38,10 +38,7 @@ export const login = catchAsync(async (req, res, next) => {
     const passwordIsOk = await verifyPassword(password, user.password);
 
     if (!passwordIsOk) {
-      return res.status(404).json({
-        error: 'error',
-        message: 'Email or password invalid',
-      });
+      return next(new AppError('Invalid email or password', 404));
     }
 
     const token = await generateJWT(user.id);

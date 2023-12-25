@@ -2,6 +2,7 @@ import express from 'express';
 import { enableCors } from './config/plugins/cors.js';
 import { globalErrorHandler } from './common/errors/error.controller.js';
 import { router } from './routes/index.js';
+import { AppError } from './common/errors/appError.js';
 
 const app = express();
 

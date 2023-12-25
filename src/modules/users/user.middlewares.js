@@ -3,6 +3,7 @@ import { UserService } from './users.services.js';
 import { promisify } from 'util';
 import jwt from 'jsonwebtoken';
 import { envs } from '../../config/enviroments/enviroments.js';
+import { AppError } from '../../common/errors/appError.js';
 
 export const validExistUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -63,7 +64,7 @@ export const protect = catchAsync(async (req, res, next) => {
   //3. decodificar el token    //Esto es que el verify no devuelve una promesa, pero es nescesaria, entonces se hace el psmisify para que retorne una promesa
   const decoded = await promisify(jwt.verify)(token, envs.SECRET_JWT_SEED);
   //4. Buscar el usuario dueno del token y validar si existe
-  const user = await UsersServices.findOne(decoded.id);
+  const user = await UserService.findOne(decoded.id);
 
   if (!user) {
     return next(
