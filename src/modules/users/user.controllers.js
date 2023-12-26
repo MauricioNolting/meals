@@ -58,6 +58,19 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const updateProfile = catchAsync(async (req, res, next) => {
   try {
+    const { user } = req;
+    const { name, email } = req.body;
+
+    const update = await UserService.updateUser(user, { name, email });
+    if (!update) {
+      return next(new AppError('Invalid credentials', 404));
+    }
+
+    return res.status(200).json({
+      message: 'User update succesfully!',
+      update,
+    });
+    console.log(user);
   } catch (error) {
     console.log(error);
   }
@@ -65,20 +78,16 @@ export const updateProfile = catchAsync(async (req, res, next) => {
 
 export const deleteUser = catchAsync(async (req, res, next) => {
   try {
-  } catch (error) {
-    console.log(error);
-  }
-});
+    const { user } = req;
 
-export const findUsersOrders = catchAsync(async (req, res, next) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-});
+    const userdelete = await UserService.deleteUser(user);
+    if (!userdelete) {
+      return next(new AppError('Invalid credentials', 404));
+    }
 
-export const findOneOrder = catchAsync(async (req, res, next) => {
-  try {
+    return res.status(200).json({
+      message: 'User was deleted succesfully',
+    });
   } catch (error) {
     console.log(error);
   }

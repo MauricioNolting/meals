@@ -2,11 +2,14 @@ import express from 'express';
 import {
   createUser,
   deleteUser,
-  findOneOrder,
-  findUsersOrders,
   login,
   updateProfile,
 } from './user.controllers.js';
+import {
+  protect,
+  protectAcoountOwner,
+  validExistUser,
+} from './user.middlewares.js';
 
 export const router = express.Router();
 
@@ -14,10 +17,17 @@ router.post('/signup', createUser);
 
 router.post('/login', login);
 
-router.patch('/:id', updateProfile);
+router.patch(
+  '/:id',
+  protect,
+  validExistUser,
+  protectAcoountOwner,
+  updateProfile
+);
 
-router.delete('/:id', deleteUser);
+router.delete('/:id', protect, validExistUser, protectAcoountOwner, deleteUser);
 
-router.get('/orders', findUsersOrders);
+router.get('/orders', protect, validExistUser, protectAcoountOwner);
 
-router.get('/orders/:id', findOneOrder);
+//arreglar esto
+router.get('/orders/:id', updateProfile);
