@@ -6,6 +6,14 @@ export const createRestaurant = catchAsync(async (req, res, next) => {
   try {
     const { name, adress, rating } = req.body;
 
+    const existRestaurant = await RestaurantServices.findOneRestaurantByName(
+      name
+    );
+
+    if (existRestaurant) {
+      return next(new AppError('This name already exist', 401));
+    }
+
     const restaurant = await RestaurantServices.createRestaurant({
       name,
       adress,
@@ -32,9 +40,6 @@ export const createReviews = catchAsync(async (req, res, next) => {
       comment,
       rating,
     });
-    if (!review) {
-      return next(new AppError('review not found', 401));
-    }
 
     return res.status(200).json({
       review,
@@ -46,6 +51,9 @@ export const createReviews = catchAsync(async (req, res, next) => {
 
 export const deleteReview = catchAsync(async (req, res, next) => {
   try {
+    return res.status(200).json({
+      message: 'Review was deleted',
+    });
   } catch (error) {
     console.log(error);
   }

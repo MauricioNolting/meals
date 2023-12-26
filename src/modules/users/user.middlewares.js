@@ -78,11 +78,11 @@ export const protect = catchAsync(async (req, res, next) => {
 });
 
 export const protectAcoountOwner = (req, res, next) => {
-  const { sessionUser } = req;
+  const { user, sessionUser } = req;
 
-  const userId = req.params.id;
-
-  if (userId != sessionUser?.id) {
+  console.log(user?.id);
+  console.log(sessionUser?.id);
+  if (user?.id != sessionUser?.id) {
     return next(new AppError('You do not own whis account', 401));
   }
 

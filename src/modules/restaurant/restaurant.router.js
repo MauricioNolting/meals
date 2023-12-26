@@ -1,11 +1,14 @@
 import express from 'express';
-import { protect } from '../users/user.middlewares.js';
+import { protect, protectAcoountOwner } from '../users/user.middlewares.js';
 import {
   createRestaurant,
   createReviews,
   deleteReview,
 } from './restaurant.controller.js';
-import { validateExistRestaurant } from './restaurat.middleware.js';
+import {
+  valiExistReview,
+  validateExistRestaurant,
+} from './restaurat.middleware.js';
 
 export const router = express.Router();
 
@@ -20,4 +23,9 @@ router.post('/reviews/:id', validateExistRestaurant, createReviews);
 router
   .route('/reviews/:restaurantId/:id')
   .patch()
-  .delete(validateExistRestaurant, deleteReview);
+  .delete(
+    validateExistRestaurant,
+    valiExistReview,
+    protectAcoountOwner,
+    deleteReview
+  );

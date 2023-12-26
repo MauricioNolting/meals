@@ -18,3 +18,18 @@ export const validateExistRestaurant = catchAsync(async (req, res, next) => {
   req.restaurant = restaurant;
   next();
 });
+
+export const valiExistReview = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const review = RestaurantServices.findOneReview(id);
+
+  if (!review) {
+    return next(new AppError(`Review with id: ${id} not found`, 404));
+  }
+
+  req.review = review;
+
+  req.user = review.users;
+  next();
+});
