@@ -6,6 +6,9 @@ import { RestaurantServices } from './restaurant.services.js';
 export const createRestaurant = catchAsync(async (req, res, next) => {
   try {
     const { name, adress, rating } = req.body;
+    if (rating < 1 || rating > 5) {
+      return next(new AppError('Rating do is a number between 1 and 5'));
+    }
 
     const existRestaurant = await RestaurantServices.findOneRestaurantByName(
       name
@@ -61,6 +64,10 @@ export const createReviews = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { comment, rating } = req.body;
     const { sessionUser } = req;
+
+    if (rating < 1 || rating > 5) {
+      return next(new AppError('Rating do is a number between 1 and 5'));
+    }
 
     const review = await RestaurantServices.createReview({
       userId: sessionUser.id,
