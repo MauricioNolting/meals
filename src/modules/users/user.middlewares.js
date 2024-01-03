@@ -80,6 +80,9 @@ export const protect = catchAsync(async (req, res, next) => {
 export const protectAcoountOwner = (req, res, next) => {
   const { user, sessionUser } = req;
 
+  console.log('user: ' + JSON.stringify(req.user.id, null, 2));
+
+  console.log('SESSIONUSER: ' + JSON.stringify(req.sessionUser.id, null, 2));
   if (user?.id != sessionUser?.id) {
     return next(new AppError('You do not own whis account', 401));
   }
@@ -96,4 +99,20 @@ export const restictTo = (...roles) => {
     }
     next();
   };
+};
+
+export const userId = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await UserService.findOneByEmail(email);
+
+  if (!user) {
+    return res.status(404).json({
+      error: 'error',
+      message: 'User not found',
+    });
+  }
+
+  req.userId = user.id;
+  next();
 };

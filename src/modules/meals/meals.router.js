@@ -6,7 +6,7 @@ import {
   findOneMeal,
   updateMeal,
 } from './meals.controllers.js';
-import { protect, protectAcoountOwner } from '../users/user.middlewares.js';
+import { protect } from '../users/user.middlewares.js';
 
 export const router = express.Router();
 
@@ -14,5 +14,5 @@ router.use(protect);
 router.get('/', findAllMeals);
 router.post('/:id', createMeals);
 router.get('/:id', findOneMeal);
-router.patch('/:id', protectAcoountOwner, updateMeal);
-router.delete('/:id', protectAcoountOwner, deleteMeal);
+router.patch('/:id', protect, updateMeal);
+router.delete('/:id', protect, deleteMeal);

@@ -1,3 +1,4 @@
+import { Order } from '../orders/orders.model.js';
 import { User } from '../users/user.model.js';
 import { Restaurant } from './resaturant.model.js';
 import { Review } from './reviews.model.js';
@@ -34,6 +35,19 @@ export class RestaurantServices {
     });
   }
 
+  static async findOneRestaurnt(id) {
+    return await Restaurant.findOne({
+      where: {
+        id,
+        status: true,
+      },
+    });
+  }
+
+  static async updateRestaurant(restaurant, data) {
+    return await restaurant.update(data);
+  }
+
   static async findOneRestaurantByName(name) {
     return await Restaurant.findOne({
       where: {
@@ -41,5 +55,21 @@ export class RestaurantServices {
         status: true,
       },
     });
+  }
+
+  static async findAllRestaurants() {
+    return await Restaurant.findAll({
+      where: {
+        status: true,
+      },
+    });
+  }
+
+  static async updateReview(review, data) {
+    return await review.update(data);
+  }
+
+  static async findAllOrders(review, data) {
+    return await Order.findAll();
   }
 }

@@ -12,6 +12,15 @@ export class MealsServices {
     });
   }
 
+  static async findOneByName(name) {
+    return await Meal.findOne({
+      where: {
+        name,
+        status: true,
+      },
+    });
+  }
+
   static async findOne(id) {
     return await Meal.findOne({
       where: {

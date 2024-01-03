@@ -4,6 +4,10 @@ import {
   createRestaurant,
   createReviews,
   deleteReview,
+  findAllRestaurant,
+  findOneRestaurant,
+  updateRestaurant,
+  updateReview,
 } from './restaurant.controller.js';
 import {
   valiExistReview,
@@ -13,16 +17,22 @@ import {
 export const router = express.Router();
 
 router.use(protect);
-router
-  .route('/')
-  .post(createRestaurant)
-  .get(/*obtener los restaurantes creados */);
+router.route('/').post(createRestaurant).get(findAllRestaurant);
 
 router.post('/reviews/:id', validateExistRestaurant, createReviews);
 
+router.patch('/:id', updateRestaurant);
+
+router.get('/:id', findOneRestaurant);
+
 router
   .route('/reviews/:restaurantId/:id')
-  .patch()
+  .patch(
+    validateExistRestaurant,
+    valiExistReview,
+    protectAcoountOwner,
+    updateReview
+  )
   .delete(
     validateExistRestaurant,
     valiExistReview,

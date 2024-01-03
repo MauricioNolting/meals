@@ -9,12 +9,19 @@ export const createMeals = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const { name, price } = req.body;
 
+    //verificar que si exista el restaurante donde se quiere crear la comida
     const restaurantExist = await RestaurantServices.findOneRestaurant(id);
     if (!restaurantExist) {
       return next(new AppError('This restaurantId dont exist', 400));
     }
 
     restaurantId = id;
+
+    //verificar que no exista una comida con ese nombre
+    const mealExist = await MealsServices.findOneByName(name);
+    if (mealExist) {
+      return next(new AppError('This meal already exist', 400));
+    }
 
     const meal = await MealsServices.createMeals({ name, price, restaurantId });
 

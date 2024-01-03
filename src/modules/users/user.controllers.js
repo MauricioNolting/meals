@@ -2,6 +2,8 @@ import { AppError } from '../../common/errors/appError.js';
 import { catchAsync } from '../../common/errors/catchAsync.js';
 import { verifyPassword } from '../../pluggins/enripted-password.pluggins.js';
 import { generateJWT } from '../../pluggins/generate-jwt.pluggin.js';
+import { MealsServices } from '../meals/meals.services.js';
+import { RestaurantServices } from '../restaurant/restaurant.services.js';
 import { UserService } from './users.services.js';
 
 export const createUser = catchAsync(async (req, res, next) => {
@@ -24,6 +26,7 @@ export const createUser = catchAsync(async (req, res, next) => {
 
 export const login = catchAsync(async (req, res, next) => {
   try {
+    console.log(req.userId);
     const { email, password } = req.body;
 
     const user = await UserService.findOneByEmail(email);
@@ -43,8 +46,9 @@ export const login = catchAsync(async (req, res, next) => {
 
     const token = await generateJWT(user.id);
 
+    req.userId = user.id;
     return res.status(200).json({
-      message: 'You are logged whit exit!',
+      message: 'You are logged!',
       token,
       user: {
         name: user.name,
@@ -60,6 +64,8 @@ export const updateProfile = catchAsync(async (req, res, next) => {
   try {
     const { user } = req;
     const { name, email } = req.body;
+    console.log(req.sessionUser);
+    console.log(req.user);
 
     const update = await UserService.updateUser(user, { name, email });
     if (!update) {
@@ -87,6 +93,25 @@ export const deleteUser = catchAsync(async (req, res, next) => {
 
     return res.status(200).json({
       message: 'User was deleted succesfully',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const findAllOrders = catchAsync(async (req, res, next) => {
+  try {
+    const { sessionUser } = req;
+
+    console.log(sessionUser.id);
+    const orders = await UserService.findAllOrders(sessionUser.id);
+
+    if (!orders || orders.length === 0) {
+      return next(new AppError(`This user wasnt create orders`, 400));
+    }
+
+    return res.status(200).json({
+      orders,
     });
   } catch (error) {
     console.log(error);

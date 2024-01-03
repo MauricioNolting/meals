@@ -1,4 +1,6 @@
+import { Meal } from '../meals/meals.model.js';
 import { Order } from '../orders/orders.model.js';
+import { Restaurant } from '../restaurant/resaturant.model.js';
 import { User } from './user.model.js';
 
 export class UserService {
@@ -34,12 +36,21 @@ export class UserService {
     });
   }
 
-  static async findAllOrders() {
+  static async findAllOrders(userId) {
     return await Order.findAll({
-      where: {
-        id,
-        status: true,
-      },
+      where: { user_id: userId },
+      include: [
+        {
+          model: Meal,
+          attributes: ['name'],
+          include: [
+            {
+              model: Restaurant,
+              attributes: ['name'],
+            },
+          ],
+        },
+      ],
     });
   }
 }
